@@ -1,0 +1,27 @@
+title = "Borrower proof-of-concept"
+
+init = [
+  "banks",
+  "populations"
+]
+eval = [
+  "banks",
+  "populations"
+]
+
+[agents]
+  [agents.banks]
+    [agents.banks.royal_bank]
+      module = "bank"
+      label = "Royal Bank of Ankh-Morpork"
+      initial_deposit = 0
+
+  [agents.populations]
+    [agents.populations.the_borrower]
+      module = "borrower"
+      label = "The Borrower"
+      bank = "royal_bank"
+      initial_deposit = 0
+      loan_amount = 1200
+      loan_interest = 10
+      loan_duration = 12

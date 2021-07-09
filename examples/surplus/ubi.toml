@@ -1,0 +1,162 @@
+# This is a configuration that uses standard TOML syntax (https://toml.io) to
+# define an economic world scenario which can then be loaded and executed as a
+# simulation in the Glooper engine.
+
+# An optional title for the world.
+title = "Ankh-Morpork: An economy of surplus with universal basic income"
+
+# An optional longer description of the world's purpose.
+description = """A hypothetical society of surplus where the labour output is
+  so high that only a few workers are employed to produce and
+  sell two consumer goods in a population of 10000 workers all
+  sharing the same needs profile. Money supply is fixed and
+  determined by the initial cash deposits."""
+
+# The order of the agent groups when initialized at the start of a simulation.
+# The order of initialization within each group is randomized.
+init = [
+  "banks",
+  "governments",
+  "factories",
+  "markets",
+  "populations"
+]
+
+# The order of the groups evaluated within each simulation cycle. The order of
+# evaluation within each group is then randomized.
+eval = [
+  "governments",
+  "factories",
+  "markets",
+  "populations",
+  "banks"
+]
+
+# Recipes are formulas used to describe the manufacturing of a product. They
+# also serve as a way to define the products available in the simulated world.
+[recipes]
+  [recipes.food]
+    label = "Food"
+    consumable = true
+    components = []
+  
+  [recipes.luxury]
+    label = "Luxury item"
+    consumable = true
+    components = []
+
+# The agents are the modules evaluated within each simulation cycle. Each
+# agent is defined with a unique key for reference along with individual
+# settings applied at the time of initialization.
+[agents]
+
+  [agents.governments]  
+    [agents.governments.ankh-morpork]
+      module = "government"
+      bank = "royal_bank"
+      label = "City of Ankh-Morpork"
+      initial_deposit = 100000
+      civil_servants_max = 0
+      wages_min = 10
+
+      # Taxes and benefit policies are rules that defines a target, criteria and
+      # a value formula. When the formula is evaluated it results in a target
+      # entity either receiving an amount as benefits or being charged an amount
+      # as tax.
+      [agents.governments.ankh-morpork.benefits]
+        [agents.governments.ankh-morpork.benefits.ubi]
+          label = "Universal Basic Income"
+          value = "$minimum_wage - $income"
+          target_group = "workers"
+
+      [agents.governments.ankh-morpork.taxes]
+        [agents.governments.ankh-morpork.taxes.personal_income]
+          label = "Personal income tax with minimum wage cutoff"
+          value = "($income - $minimum_wage) * 0.5"
+          target_group = "workers"
+        [agents.governments.ankh-morpork.taxes.personal_property]
+          label = "Personal property tax with cutoff at 100"
+          value = "($property - 100) * 0.20"
+          target_group = "workers"
+        [agents.governments.ankh-morpork.taxes.company_profit]
+          label = "Flat corporate tax on profits"
+          value = "$profits * 0.2"
+          target_group = "companies"
+        [agents.governments.ankh-morpork.taxes.company_capital]
+          label = "Corporate tax on capital with cutoff at 100000"
+          value = "($capital - 100000) * 0.20"
+          target_group = "companies"
+
+  # Banks define the agents that represent the finance institutions
+  [agents.banks]
+    [agents.banks.royal_bank]
+      module = "bank"
+      label = "Royal Bank of Ankh-Morpork"      
+
+  # Factories represent the part of the industry that actually produces something.
+  [agents.factories]
+    [agents.factories.food_factory]
+        module = "factory"
+        bank = "royal_bank"
+        initial_deposit = 100000
+        inventory_max = 1000
+        label = "Food Factory"
+        market = "luxury_market"
+        product = "food"
+        worker_max = 1
+        worker_output = 1000
+
+    [agents.factories.luxury_factory]
+        module = "factory"
+        bank = "royal_bank"
+        initial_deposit = 100000
+        inventory_max = 200
+        label = "Luxury Factory"
+        market = "luxury_market"
+        product = "luxury"
+        worker_max = 1
+        worker_output = 200
+  
+  # Markets represent companies that sell something, like goods and services.
+  [agents.markets]
+    [agents.markets.food_market]
+      module = "market"
+      bank = "royal_bank"
+      bid_equals_ask = false
+      initial_deposit = 100000
+      inventory_max = 2000
+      label = "Food Market"
+      mode = "active"
+      product = "food"
+      spread_max = 5
+      spread_min = 1
+      worker_max = 1
+
+    [agents.markets.luxury_market]
+      module = "market"
+      bank = "royal_bank"
+      bid_equals_ask = false
+      initial_deposit = 100000
+      inventory_max = 2000
+      label = "Luxury Market"
+      mode = "active"
+      product = "luxury"
+      spread_max = 5
+      spread_min = 1
+      worker_max = 1
+
+  # A population describes a group of agents sharing common traits
+  # like a purchase profile, skill level, and social status
+  [agents.populations]
+    [agents.populations.worker]
+      module = "population"
+      label = "Workers"
+      bank = "royal_bank"
+      initial_population = 5
+      initial_deposit = 10
+
+      # The purchase profile or need describes how many products an agent
+      # buys, consumes and stores.
+      [agents.populations.worker.needs]
+        food = {purchase = 2, consume = 1, store = 1}
+        luxury = {purchase = 2, consume = 1, store = 1}
