@@ -180,6 +180,12 @@ defmodule Glooper.Bank do
   defp interbank_cash(from, to, amount) do
     # A fun method of using "cash drones" for interbank transfers...
     case {GBAN.parse(from), GBAN.parse(to)} do
+      {{:error, _} = err, _} ->
+        {:error, {:invalid_source_gban, err}}
+
+      {_, {:error, _} = err} ->
+        {:error, {:invalid_target_gban, err}}
+
       {from_gban, to_gban} ->
         with :ok <-
                withdraw_cash(
