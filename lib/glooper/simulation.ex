@@ -183,16 +183,20 @@ defmodule Glooper.Simulation do
         false -> state.init
       end
 
+    IO.puts("")
+
     case action do
-      :init -> IO.puts("\n==> Initializing...")
-      :eval -> IO.puts("\n==> Evaluating cycle #{state.timestamp}...")
+      :init -> IO.puts("#{String.pad_trailing("=== Initialization =", 80, "=")}")
+      :eval -> IO.puts("#{String.pad_trailing("=== Cycle #{state.timestamp} =", 80, "=")}")
     end
 
     Enum.reduce_while(agent_groups, :ok, fn group, :ok ->
-      case action do
-        :init -> IO.puts("\n==> Initializing #{group}...")
-        :eval -> IO.puts("\n==> Evaluating #{group} for cycle #{state.timestamp}...")
-      end
+      IO.puts("\n#{String.pad_trailing("--- #{String.capitalize(group)} -", 80, "-")}\n")
+
+      # case action do
+      #   :init -> IO.puts("\n==> Initializing #{group}")
+      #   :eval -> IO.puts("\n==> Evaluating #{group} ...")
+      # end
 
       # Get the execution module and agent ids for the group
       agents =
@@ -230,10 +234,12 @@ defmodule Glooper.Simulation do
     # Update the cycle counter for the next round
     Agent.update(sim, fn state -> %{state | timestamp: state.timestamp + 1, initialized: true} end)
 
-    case action do
-      :init -> IO.puts("\n==> Initialization completed!")
-      :eval -> IO.puts("\n==> Evaluation of cycle #{state.timestamp} completed!")
-    end
+    # case action do
+    #   :init -> IO.puts("\n==> Initialization completed!")
+    #   :eval -> IO.puts("\n==> Evaluation of cycle #{state.timestamp} completed!")
+    # end
+
+    IO.puts("\n================================================================================")
   end
 
   #############################################################################
