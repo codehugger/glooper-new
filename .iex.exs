@@ -5,9 +5,9 @@ alias Glooper.{Bank, Borrower, Simulation}
 ###############################################################################
 #### Borrower POC - Config Example
 ###############################################################################
-borrower_config = Toml.decode_file!("#{__DIR__}/examples/borrower/borrower.toml")
+borrower_config = Toml.decode_file!("#{__DIR__}/examples/borrower.toml")
 
 ###############################################################################
 #### UBI 2 Products - Config Example
 ###############################################################################
-ubi_config = Toml.decode_file!("#{__DIR__}/examples/surplus/ubi.toml")
+ubi_config = Toml.decode_file!("#{__DIR__}/examples/ubi.toml")
