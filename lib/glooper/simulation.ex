@@ -27,6 +27,7 @@ defmodule Glooper.Simulation do
 
   alias Glooper.{
     Bank,
+    BankInvestor,
     Borrower,
     Government,
     Factory,
@@ -310,18 +311,24 @@ defmodule Glooper.Simulation do
         agents =
           Map.fetch!(agent_groups, eval_group)
           |> Enum.map(fn {agent_no, %{"module" => module} = config} ->
-            {:ok, _pid, _name} =
+            result =
               case module do
                 "bank" -> Bank.start_from_config(state.sim_no, agent_no, config)
+                "bank_investor" -> BankInvestor.start_from_config(state.sim_no, agent_no, config)
                 "borrower" -> Borrower.start_from_config(state.sim_no, agent_no, config)
                 "factory" -> Factory.start_from_config(state.sim_no, agent_no, config)
                 "government" -> Government.start_from_config(state.sim_no, agent_no, config)
                 "market" -> Market.start_from_config(state.sim_no, agent_no, config)
                 "population" -> Population.start_from_config(state.sim_no, agent_no, config)
+                _ -> nil
               end
 
-            agent_no
+            case result do
+              {:ok, _pid, _name} -> agent_no
+              nil -> nil
+            end
           end)
+          |> Enum.filter(fn x -> x != nil end)
 
         {eval_group, agents}
       end)

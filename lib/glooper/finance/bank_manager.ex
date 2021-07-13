@@ -14,9 +14,14 @@ defmodule Glooper.BankManager do
   @enforce_keys []
   @optional_keys [
     bank_no: nil,
+    # General Ledger
     gl: %GL{},
+    # Loan Book
     lb: %LB{},
-    tl: %TL{}
+    # Transaction Log
+    tl: %TL{},
+    # Shareholder registry
+    sr: %{}
   ]
 
   defstruct @enforce_keys ++ @optional_keys
@@ -131,6 +136,29 @@ defmodule Glooper.BankManager do
     with {:ok, gl} <- GL.transfer(bm.gl, from, to, amount),
          {:ok, tl, t} <- TL.add(bm.tl, from, to, amount, text, ts) do
       {:ok, %{bm | gl: gl, tl: tl}, t}
+    else
+      {:error, _} = err -> err
+    end
+  end
+
+  #############################################################################
+  #### Investment
+  #############################################################################
+
+  @doc """
+  Capital transfer aka selling of shares to holder
+  """
+  def sell_shares(
+        %BM{gl: gl, tl: tl, sr: sr} = bm,
+        holder,
+        amount,
+        text \\ "Selling shares",
+        ts \\ -1
+      ) do
+    with {:ok, gl} <- GL.transfer(gl, "cash", "capital", amount),
+         {:ok, tl, t} <- TL.add(tl, "cash", "capital", amount, text, ts),
+         sr <- Map.put(sr, holder, amount) do
+      {:ok, %{bm | gl: gl, tl: tl, sr: sr}, t}
     else
       {:error, _} = err -> err
     end

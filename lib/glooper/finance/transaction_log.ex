@@ -39,7 +39,11 @@ defmodule Glooper.TransactionLog do
 
   @doc """
   Add the given transaction to the underlying log by specifying its parts.
+  Zero amount transactions are ignored.
   """
+  def add(%TL{} = tl, _, _, 0, _, _),
+    do: {:ok, tl, nil}
+
   def add(%TL{} = tl, debit_no, credit_no, amount, text, timestamp),
     do: add(tl, T.create(debit_no, credit_no, amount, text, timestamp))
 

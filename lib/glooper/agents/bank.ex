@@ -130,7 +130,7 @@ defmodule Glooper.Bank do
   @doc """
   Deposit cash into a customer deposit account.
   """
-  def deposit_cash(agent, acc_no, amount, text \\ "Deposit cash") do
+  def deposit_cash(agent, acc_no, amount, text \\ "Deposit cash") when amount >= 0 do
     Agent.get_and_update(agent, fn state ->
       ts = Simulation.current_timestamp(state.sim_no)
       {:ok, bank, t} = BM.deposit_cash(state.bank, acc_no, amount, text, ts)
@@ -141,7 +141,7 @@ defmodule Glooper.Bank do
   @doc """
   Withdraw cash from a customer deposit account.
   """
-  def withdraw_cash(agent, acc_no, amount, text \\ "Withdraw cash") do
+  def withdraw_cash(agent, acc_no, amount, text \\ "Withdraw cash") when amount >= 0 do
     Agent.get_and_update(agent, fn state ->
       ts = Simulation.current_timestamp(state.sim_no)
       {:ok, bank, _t} = BM.withdraw_cash(state.bank, acc_no, amount, text, ts)
@@ -152,7 +152,7 @@ defmodule Glooper.Bank do
   @doc """
   Transfers the given amount using debit and credit account numbers.
   """
-  def transfer(bank, from, to, amount, text \\ "Transfer") when amount > 0 do
+  def transfer(bank, from, to, amount, text \\ "Transfer") when amount >= 0 do
     case {GBAN.parse(from), GBAN.parse(to)} do
       # Debit account is faulty
       {{:error, _} = err, _} ->
@@ -334,6 +334,18 @@ defmodule Glooper.Bank do
   end
 
   #############################################################################
+  #### Investment
+  #############################################################################
+
+  def sell_shares(agent, holder, amount, text \\ "Shares sale") when amount >= 0 do
+    Agent.get_and_update(agent, fn state ->
+      ts = Simulation.current_timestamp(state.sim_no)
+      {:ok, bank, t} = BM.sell_shares(state.bank, holder, amount, text, ts)
+      {{:ok, t}, %{state | bank: bank}}
+    end)
+  end
+
+  #############################################################################
   #### Borrower POC
   #############################################################################
 
@@ -373,19 +385,22 @@ defmodule Glooper.Bank do
     state = Agent.get(bank, & &1)
 
     if length(state.borrowers) > 0 do
-      IO.puts("...paying borrowers #{inspect(state.borrowers)}")
+      IO.puts("... \"#{state.agent_no}\" is paying borrowers")
 
       # Pay the borrowers enough so they can afford their next payment
-      Enum.each(state.borrowers, fn {_customer_no, acc_no, loan_no} ->
+      Enum.each(state.borrowers, fn {customer_no, acc_no, loan_no} ->
         {:ok, payment} = next_payment(bank, loan_no)
         {:ok, account} = get_account(bank, "interest_income")
+        amount = min(Payment.total(payment), account.deposit)
+
+        IO.puts("... \"#{state.agent_no}\" paying salary to \"#{customer_no}\" amount: #{amount}")
 
         {:ok, _trans} =
           transfer(
             bank,
             "interest_income",
             acc_no,
-            min(Payment.total(payment), account.deposit),
+            amount,
             "Borrower salary payment"
           )
       end)

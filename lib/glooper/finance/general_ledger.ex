@@ -142,8 +142,13 @@ defmodule Glooper.GeneralLedger do
   #############################################################################
 
   @doc """
-  Standard transfer of funds using debit and credit.
+  Standard transfer of funds using debit and credit. Zero transfers are
+  swallowed and yield unchanged state.
   """
+  def transfer(%GL{} = gl, _debit_no, _credit_no, 0) do
+    {:ok, gl}
+  end
+
   def transfer(%GL{} = gl, debit_no, credit_no, amount) when amount > 0 do
     with {:ok, gl} <- credit(gl, credit_no, amount),
          {:ok, gl} <- debit(gl, debit_no, amount) do

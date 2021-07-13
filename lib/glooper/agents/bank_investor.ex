@@ -1,9 +1,7 @@
-defmodule Glooper.Borrower do
+defmodule Glooper.BankInvestor do
   @moduledoc """
-  A borrower is an agent that requests a loan from a bank, then uses
-  the loan to pay it back. When the money runs out the borrower asks the
-  bank to hire her and the bank pays the borrower enough to pay back the
-  rest of the loan.
+  A bank investor is an agent that buys shares for a fixed amount at
+  the beginning of a simulation and then just sits on it.
   """
   use Agent
 
@@ -15,18 +13,11 @@ defmodule Glooper.Borrower do
     @moduledoc false
     @enforce_keys [:sim_no, :agent_no, :bank]
     @optional_keys [
-      label: "The Borrower",
-      account_no: "",
-      initial_deposit: 0,
+      label: "The Investor",
 
-      # Employment
-      employed: false,
-
-      # Loan
-      loan_no: "",
-      loan_amount: 1200,
-      loan_interest: 10.0,
-      loan_duration: 12
+      # Investment
+      initial_investment: 0,
+      transactions: []
     ]
     defstruct @enforce_keys ++ @optional_keys
 
@@ -42,10 +33,7 @@ defmodule Glooper.Borrower do
         agent_no: agent_no,
         label: Map.fetch!(config, "label"),
         bank: Map.fetch!(config, "bank"),
-        initial_deposit: Map.get(config, "initial_deposit", 0),
-        loan_amount: Map.fetch!(config, "loan_amount"),
-        loan_interest: Map.fetch!(config, "loan_interest"),
-        loan_duration: Map.fetch!(config, "loan_duration")
+        initial_investment: Map.fetch!(config, "initial_investment")
       ]
     end
   end
@@ -92,73 +80,10 @@ defmodule Glooper.Borrower do
   #### Bank Helpers
   #############################################################################
 
-  defp renew_loan(borrower) do
-    Agent.get_and_update(borrower, fn state ->
-      case get_loan(state.sim_no, state.bank, state.loan_no, state.agent_no) do
-        {:ok, _loan} ->
-          {:ok, state}
-
-        {:error, :not_found} ->
-          {:ok, loan_no} =
-            request_loan(
-              state.sim_no,
-              state.bank,
-              state.account_no,
-              state.loan_amount,
-              state.loan_duration,
-              state.loan_interest,
-              state.agent_no
-            )
-
-          {:ok, %{state | loan_no: loan_no}}
-      end
-    end)
-  end
-
-  defp hire_borrower(sim_no, bank, agent_no, account_no, loan_no) do
-    IO.puts("... \"#{agent_no}\" is broke and is asking bank \"#{bank}\" for a job")
+  defp buy_shares(sim_no, bank, agent_no, amount) do
+    IO.puts("... \"#{agent_no}\" is buying shares in \"#{bank}\" for a #{amount}")
     [{bank, module}] = get_bank_agent(sim_no, bank)
-    apply(module, :hire_borrower, [bank, agent_no, account_no, loan_no])
-  end
-
-  defp make_loan_payment(borrower) do
-    Agent.get_and_update(borrower, fn state ->
-      case get_loan(state.sim_no, state.bank, state.loan_no, state.agent_no) do
-        {:ok, _loan} ->
-          case make_next_payment(
-                 state.sim_no,
-                 state.bank,
-                 state.loan_no,
-                 state.account_no,
-                 state.agent_no
-               ) do
-            {:error, :insufficient_funds} ->
-              hire_borrower(
-                state.sim_no,
-                state.bank,
-                state.agent_no,
-                state.account_no,
-                state.loan_no
-              )
-
-              {state, state}
-
-            {:error, :loan_paid_off} ->
-              {:ok, %{state | loan_no: ""}}
-
-            {:ok, _} ->
-              {:ok, state}
-
-            {:error, _} = err ->
-              {err, state}
-          end
-
-        {:error, _} = err ->
-          {err, state}
-      end
-    end)
-
-    :ok
+    apply(module, :sell_shares, [bank, agent_no, amount])
   end
 
   #############################################################################
@@ -176,27 +101,8 @@ defmodule Glooper.Borrower do
 
     # Open up a deposit account, deposit the initial cash and request the first loan
     Agent.update(agent, fn state ->
-      with {:ok, account_no} <-
-             open_account(state.sim_no, state.bank, state.agent_no, state.agent_no),
-           {:ok, _t} <-
-             deposit_cash(
-               state.sim_no,
-               state.bank,
-               account_no,
-               state.initial_deposit,
-               state.agent_no
-             ),
-           {:ok, loan_no} <-
-             request_loan(
-               state.sim_no,
-               state.bank,
-               account_no,
-               state.loan_amount,
-               state.loan_duration,
-               state.loan_interest,
-               state.agent_no
-             ) do
-        %{state | account_no: account_no, loan_no: loan_no}
+      case buy_shares(state.sim_no, state.bank, state.agent_no, state.initial_investment) do
+        {:ok, t} -> %{state | transactions: [t | state.transactions]}
       end
     end)
   end
@@ -211,9 +117,6 @@ defmodule Glooper.Borrower do
   def eval(agent, _simulation) do
     state = Agent.get(agent, & &1)
     IO.puts("--> evaluating \"#{state.agent_no}\"")
-
-    :ok = make_loan_payment(agent)
-    :ok = renew_loan(agent)
 
     # Everything went fine
     :ok

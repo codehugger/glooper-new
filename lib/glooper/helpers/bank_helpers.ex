@@ -15,11 +15,11 @@ defmodule Glooper.BankHelpers do
 
     case apply(module, :open_account, [bank, agent_no]) do
       {:ok, account_no} = res ->
-        IO.puts("... \"#{label}\" successfully opened an account \"#{account_no}\"")
+        IO.puts("... \"#{label}\" successfully opened an account no: \"#{account_no}\"")
         res
 
       {:error, _reason} = err ->
-        IO.puts("... \"#{label}\" was unable to open a deposit account")
+        IO.puts("... \"#{label}\" was unable to open a deposit account \"#{err}\"")
         err
     end
   end
