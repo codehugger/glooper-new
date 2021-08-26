@@ -1,9 +1,8 @@
-defmodule Glooper.Borrower do
+defmodule Glooper.Builder do
   @moduledoc """
-  A borrower is an agent that requests a loan from a bank, then uses
-  the loan to pay it back. When the money runs out the borrower asks the
-  bank to hire her and the bank pays the borrower enough to pay back the
-  rest of the loan.
+  A builder is an agent that requests a construction loan from a bank
+  to finance building, hiring staff and paying workers, and attempts
+  to sell on market.
   """
   use Agent
 
@@ -13,14 +12,15 @@ defmodule Glooper.Borrower do
 
   defmodule State do
     @moduledoc false
-    @enforce_keys [:sim_no, :agent_no, :bank]
+    @enforce_keys [:sim_no, :agent_no, :bank, :recipe]
     @optional_keys [
       label: "The Borrower",
       account_no: "",
       initial_deposit: 0,
 
-      # Employment
-      employed: false,
+      # Building
+      build_time: 10,
+      labour_input: 100,
 
       # Loan
       loan_no: "",

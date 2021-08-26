@@ -22,12 +22,12 @@ eval = [
       label = "The Borrower"
       bank = "royal_bank"
       initial_deposit = 100
-      loan_amount = 10000
+      loan_amount = 10_000
       loan_interest = 2
       loan_duration = 12
     
     [agents.populations.bank_investor]
       module = "bank_investor"
-      label = "The Investor"
+      label = "The Bank Investor"
       bank = "royal_bank"
-      initial_investment = 10000
+      initial_investment = 10_000

@@ -152,7 +152,7 @@ eval = [
       module = "population"
       label = "Workers"
       bank = "royal_bank"
-      initial_population = 5
+      initial_population = 50_000
       initial_deposit = 10
 
       # The purchase profile or need describes how many products an agent
