@@ -1,0 +1,215 @@
+repo_name: codehugger/glooper-new
+report_id: cfaccc4762c244df2b2681c8ef3e31e6
+repo_type: Public
+timestamp: '2023-11-09T12:34:43+00:00'
+requested_by: codehugger
+provider: github
+branch: main
+detected_tools_count: 17
+tools:
+- name: CSS 3
+  description: The latest evolution of the Cascading Style Sheets language
+  website_url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source: Repo Metadata
+- name: Elixir
+  description: Dynamic, functional language designed for building scalable and maintainable
+    applications
+  website_url: http://elixir-lang.org/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1974/drop.png
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source: Repo Metadata
+- name: Ruby
+  description: A dynamic, interpreted, open source programming language with a focus
+    on simplicity and productivity
+  website_url: https://www.ruby-lang.org
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/989/ruby.png
+  detection_source: mix.exs
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: Phoenix Framework
+  description: Most web frameworks make you choose between speed and a productive
+    environment. Phoenix gives you both.
+  website_url: http://www.phoenixframework.org
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/3262/-s9uoLIN.png
+  detection_source: mix.exs
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: css-loader
+  description: Helps webpack to collect CSS from all the css files
+  website_url: https://github.com/webpack-contrib/css-loader
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: CSS Pre-processors / Extensions
+  image_url: https://img.stackshare.io/service/8074/default_d2b16fd6997fb2e164de645a34f9b8d5a880d999.png
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: Cowboy
+  description: 'Small, fast, modular HTTP server written in Erlang. '
+  website_url: https://github.com/ninenines/cowboy
+  license: ISC
+  open_source: true
+  hosted_saas: false
+  category: Application Hosting
+  sub_category: Web Servers
+  image_url: https://img.stackshare.io/service/2738/1166740.png
+  detection_source: mix.exs
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source: Repo Metadata
+- name: RubyGems
+  description: Easily download, install, and use ruby software packages on your system
+  website_url: https://rubygems.org/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/service/12795/5jL6-BA5_400x400.jpeg
+  detection_source: mix.exs
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: Webpack
+  description: A bundler for javascript and friends
+  website_url: http://webpack.js.org
+  version: 5.37.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: JS Build Tools / JS Task Runners
+  image_url: https://img.stackshare.io/service/1682/IMG_4636.PNG
+  detection_source_url: assets/package-lock.json
+  detection_source: assets/webpack.config.js
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: npm
+  description: The package manager for JavaScript.
+  website_url: https://www.npmjs.com/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Front End Package Manager
+  image_url: https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png
+  detection_source: mix.exs
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: PonyDebugger
+  description: Remote network and data debugging for your native iOS app using Chrome
+    Developer Tools
+  website_url: https://github.com/square/PonyDebugger
+  open_source: true
+  hosted_saas: false
+  category: Mobile
+  sub_category: Mobile Runtime Inspector
+  image_url: https://img.stackshare.io/service/729/Logo.png
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: copy-webpack-plugin
+  description: Copy files &amp;&amp; directories with webpack
+  package_url: https://www.npmjs.com/copy-webpack-plugin
+  version: 9.0.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15941/default_b45165a5d30e541ab11711a34a78209b3e8ed7fd.png
+  detection_source_url: assets/package-lock.json
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: expose-loader
+  description: Expose loader module for webpack
+  package_url: https://www.npmjs.com/expose-loader
+  version: 3.0.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16741/default_6dc099b12d47e378ae121fb53c336fe5d8f0ffc8.png
+  detection_source_url: assets/package-lock.json
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: glob
+  description: A little globber
+  package_url: https://www.npmjs.com/glob
+  version: 7.1.7
+  license: ISC
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15875/default_7c39a83d4acd952df89b1ebfdb94c8646324fbf1.png
+  detection_source_url: assets/package-lock.json
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: mini-css-extract-plugin
+  description: Extracts CSS into separate files
+  package_url: https://www.npmjs.com/mini-css-extract-plugin
+  version: 1.6.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15992/default_8b5680d4e916298d08363c291a0d6e34c07ceb15.png
+  detection_source_url: assets/package-lock.json
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
+- name: webpack-cli
+  description: CLI for webpack &amp; friends
+  package_url: https://www.npmjs.com/webpack-cli
+  version: 4.7.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15826/default_14fd11531839d935f920b6d55bd6f3528c890ad7.png
+  detection_source_url: assets/package-lock.json
+  detection_source: assets/package.json
+  last_updated_by: Bjarki Gudlaugsson
+  last_updated_on: 2021-07-09 12:51:03.000000000 Z
